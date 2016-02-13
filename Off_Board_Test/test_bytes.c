@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #define CRC_MASK    0b01111111
-
 void writeBytes(unsigned char cmd, unsigned char addr, unsigned char val){
     //Generate checksum
     unsigned char checksum = ( (cmd + addr + val) & CRC_MASK);
@@ -11,6 +10,9 @@ void writeBytes(unsigned char cmd, unsigned char addr, unsigned char val){
     putchar(addr);
     putchar(val);
     putchar(checksum);
+    
+    printf("\n");
+    printf("Sent Command:%c Address:%c Value:%c Checksum:%c\n",cmd, addr, val, checksum);
 }
 
 int main(){
