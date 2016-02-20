@@ -18,12 +18,16 @@ int setup(){
             fprintf(stderr, "UART failed to setup\n");
             return EXIT_FAILURE;
     }
-    mraa_uart_set_baudrate(uart, 9600);
+    else{
+	    printf("UART initialized\n");
+    }
+    mraa_uart_set_mode(uart, 8,MRAA_UART_PARITY_NONE , 1);
+	mraa_uart_set_baudrate(uart, 9600);
 
     //You must send an autobauding character to the Sabertooth before sending any commands to the device
-    unsigned char autobaud = 0xAA;
+    char autobaud = 0xAA;
     mraa_uart_write(uart, &autobaud, 1);
-    printf("Sent Autobaud: %c", autobaud);
+    printf("Sent Autobaud: %c\n", autobaud);
 }
 
 /**
@@ -42,15 +46,15 @@ int destroy(){
  * It then sends the bytes in the following order: address, command, value, checksum
  */
 
-void send_command( unsigned char cmd, unsigned char addr, unsigned char val){
+void send_command( char cmd, char addr, char val){
     //Generate checksum
-    unsigned char checksum = ( (cmd + addr + val) & CRC_MASK);
-    mraa_uart_write(uart, &cmd, 1);
+    char checksum = ( (cmd + addr + val) & CRC_MASK);
     mraa_uart_write(uart, &addr, 1);
+    mraa_uart_write(uart, &cmd, 1);
     mraa_uart_write(uart, &val, 1);
     mraa_uart_write(uart, &checksum, 1);
 
-    printf("Sent bytes [Command: %c, Address:%c, Value:%c, Checksum:%c,]", cmd, addr, val, checksum);
+    printf("Sent bytes [Command: %c, Address:%c, Value:%c, Checksum:%c]\n", cmd, addr, val, checksum);
 }
 
 /*
@@ -64,14 +68,17 @@ int main(){
 
     //For now, type commands to send here.
     //TODO: Add additional function to format commands
-    unsigned int command = 0;
-    unsigned int value = 64;
-    unsigned int address = 128;
+    char command = 0;
+    char value = 64;
+    char address = 128;
     
     //Send commands
     send_command(command, address, value);
     
 
     //Close the uart connection
-    destroy();
+    //destroy();
+    while(1){
+	    sleep(3);
+    }
 }
