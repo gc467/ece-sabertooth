@@ -18,4 +18,6 @@
 
     void start_channel(uint8_t address, uint8_t channel_name);
 
+    void home_channel(uint8_t address, uint8_t channel_name);
+
 #endif // Kangaroo_Driver_Lib_h
